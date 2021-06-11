@@ -52,3 +52,25 @@ class Reserves(TemplateView):
         context['projection'] = proj
         context['seats'] = seats_query(proj.hall_id)
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+
+        try:
+            options = request.POST.getlist('option[]')
+        except:
+            return HttpResponseRedirect(reverse_lazy('home'))
+
+        # Create an entry for every selected seat
+        entries_list = []
+        for seat in options:
+            aux = Entry.create(self.projection, seat)
+            entries_list.append(aux)
+            aux.save(*args, **kwargs)
+
+        email = request.POST['email']
+
+        # NEEDED FOR THE NEXT STEP
+        purchase = Purchase.create(email=email, entries=entries_list)
+        Purchase.save(*args, **kwargs)
+
+        return HttpResponseRedirect(self.success_url)

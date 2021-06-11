@@ -5,6 +5,7 @@ from .Hall import Seat
 
 
 class Entry(models.Model):
+
     projection = models.ForeignKey(Projection, blank=False, null=True, on_delete=models.CASCADE)
     seat = models.ForeignKey(Seat, blank=False, null=True, on_delete=models.SET_NULL)
 
@@ -13,3 +14,9 @@ class Entry(models.Model):
 
     class Meta:
         unique_together = ["projection", "seat"]
+
+    @classmethod
+    def create(cls, projection, seat):
+
+        entry = cls(projection=projection, seat=seat)
+        return entry
