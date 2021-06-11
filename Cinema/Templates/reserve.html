@@ -128,6 +128,7 @@
                                                             <label>
                                                                 <input type="checkbox"
                                                                        name="reserved[]"
+                                                                       class="checkbox-row my-checkbox"
                                                                        onclick="test(this)">
                                                             </label>
                                                         </td>
@@ -217,6 +218,7 @@
     <script src="{% static "plugins/moment/moment.min.js" %}"></script>
     <script src="{% static "plugins/inputmask/jquery.inputmask.min.js" %}"></script>
 
+
     <script type="application/javascript">
 
         $(function () {
@@ -257,8 +259,10 @@
         }
     </script>
 
-    <script type="text/javascript">
+    <script>
+        var aux_value = ''
         var cost = 0
+        var counter = 0;
 
         $(document).onreadystatechange = function () {
             set_cost();
@@ -267,17 +271,15 @@
             rowcollection = get_checkbx_datatable()
             rowcollection.each(function (index, element) {
                 x = parseFloat(total_cost);
-                if (element.checked) total_cost = x += cost;
+                if (element.checked) x += cost;
+                total_cost.value;
             });
         }
-
 
         function get_checkbx_datatable() {
             let myTable = $('#example1').dataTable();
             return myTable.$(".my-checkbox", {"page": "all"});
         }
-
-        var counter = 0;
 
         function test(widget) {
             let x = document.getElementById('cost');
@@ -299,111 +301,6 @@
             document.getElementById('button').disabled = counter <= 0;
         }
 
-
-        $('#customCheckbox1').click(function () {
-            let check_box = document.getElementById('customCheckbox1');
-            {% if not user.is_authenticated %}
-                check_box.checked = false;
-                check_box.disable = true;
-            {% endif %}
-            let x = document.getElementById('credit_card_input')
-            x.disabled = check_box.checked;
-            x.value = '';
-
-            let rowcollection = get_checkbx_datatable()
-            rowcollection.each(function (index, element) {
-                element.checked = false;
-                reset();
-            });
-        });
-
-        function reset() {
-            document.getElementById('cost').value = "0.00"
-            let rowcollection = get_checkbx_datatable()
-            rowcollection.each(function (index, element) {
-                element.checked = false;
-            });
-            document.getElementById('credit_card_input').readOnly = document.getElementById('customCheckbox1').checked;
-        }
-
-        $(function () {
-            let x = document.getElementById('customCheckbox1');
-            if (x.checked) {
-                reset();
-            } else {
-                let rowcollection = get_checkbx_datatable();
-                rowcollection.each(function (index, element) {
-                    let x = document.getElementById('cost');
-                    let result = parseFloat(x.value)
-                    if (element.checked && $('#customCheckbox1').checked) {
-                        result += proj;
-                        x.value = result;
-                    } else {
-                        result += proj
-                        x.value = result;
-                    }
-                })
-            }
-        })
-
-        function set_cost() {
-            let x = document.getElementById('customCheckbox1');
-            x.checked ? cost ={{ projection.partner_points_cost }} : cost =
-            {{ projection.monetary_cost }}
-        }
-
-
-        $('#button').click(function () {
-            let a = document.getElementById('result');
-            if (a != null) {
-                fill_resuts(a);
-                return;
-            }
-            let new_input = document.createElement('input')
-            new_input.id = "result";
-            new_input.type = 'text';
-            new_input.className = 'form-control';
-            new_input.disabled = true;
-            new_input.hidden = false;
-            new_input.name = 'result';
-            let form = document.getElementById('my_post');
-            form.appendChild(new_input);
-        })
-
-        $('#customCheckbox1').click(function () {
-            let x = $('#credit_card_input')
-            let value = x.value
-            x.disabled = !x.disabled
-            x.value = value
-
-            rowcollection = get_checkbx_datatable()
-            rowcollection.each(function (index, element) {
-                element.checked = false;
-                reset();
-            });
-
-            function reset() {
-                document.getElementById('button').disabled = true;
-                counter = 0;
-                document.getElementById('cost').value = "0.00";
-            }
-
-            x.value = value
-            let result_input = document.getElementById('result');
-            fill_resuts(result_input);
-        });
-        var aux_value = ''
-
-        function fill_resuts(widget) {
-            let rowcollection = get_checkbx_datatable()
-            widget.value = " ";
-            rowcollection.each(function (index, element) {
-                if (element.checked) {
-                    widget.value === '' ? widget.value += element.value : widget.value += "," + element.value;
-                }
-            });
-        }
-
         function credit_valid(widget) {
             if (!(widget.validity.valid)) {
                 widget.value = aux_value;
@@ -414,6 +311,45 @@
             aux_value = widget.value;
         }
 
+        function reset() {
+            document.getElementById('button').disabled = true;
+            counter = 0;
+            document.getElementById('cost').value = "0.00";
+        }
+
+        function fill_results(widget) {
+            let rowcollection = get_checkbx_datatable()
+            widget.value = " ";
+            rowcollection.each(function (index, element) {
+                if (element.checked) {
+                    widget.value === '' ? widget.value += element.value : widget.value += "," + element.value;
+                }
+            });
+        }
+
+        function set_cost() {
+            let x = document.getElementById('customCheckbox1');
+            x.checked ? cost ={{ projection.partner_points_cost }} : cost =
+            {{ projection.monetary_cost }}
+        }
+
+        function reset() {
+            document.getElementById('cost').value = "0.00"
+            let rowcollection = get_checkbx_datatable()
+            rowcollection.each(function (index, element) {
+                element.checked = false;
+            });
+            document.getElementById('credit_card_input').readOnly = document.getElementById('customCheckbox1').checked;
+        }
+    </script>
+
+    <script>
+        $('#customCheckbox1').click(function () {
+            reset();
+            document.getElementById('button').disabled=true;
+        });
+
+        {#Error controller#}
         $(function () {
             $('#my_post').validate({
                 rules: {
@@ -446,8 +382,9 @@
                     $(element).removeClass('is-invalid');
                 }
             })
-        })
+        });
 
+        {#Select2 controller#}
         $(function () {
             //Initialize Select2 Elements
             $('.select2').select2();
@@ -456,8 +393,23 @@
             $('.select2bs4').select2({
                 theme: 'bootstrap4'
             })
-        })
+        });
+
+        $(function () {
+            set_cost();
+            let x = document.getElementById('customCheckbox1');
+            let total_cost = document.getElementById('cost');
+            let result = 0.00
+            let rowcollection = get_checkbx_datatable();
+            rowcollection.each(function (index, element) {
+                if (element.checked) {
+                    result += cost;
+                }
+                total_cost.value = result.toFixed(2);
+            });
+        });
     </script>
+
 
 
 

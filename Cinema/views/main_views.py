@@ -1,20 +1,14 @@
-from django import template
-from django import template
+from Cinema.models.Entry import Entry
 
 from django.shortcuts import render
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
 from Cinema.models.Hall import Seat
 
-from Cinema.services.proyection_services import get_spec_proj, seats_query
-from Cinema.services.proyection_services import seats_query, get_spec_proj
 from Cinema.models.Purchase import Purchase
-
-
-from Cinema.services.proyection_services import get_spec_proj, seats_query
 
 from Cinema.services.proyection_services import seats_query, get_spec_proj
 

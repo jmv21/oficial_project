@@ -1,9 +1,7 @@
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 
-from Cinema.forms import DiscountForm
 from django.shortcuts import render
-from django.forms import formset_factory
 from django.views.generic import TemplateView
 
 from Cinema.services.proyection_services import active_discounts_query, all_discounts_query, discount_update_active
