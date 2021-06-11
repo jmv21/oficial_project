@@ -1,0 +1,31 @@
+{% extends 'Main_Templates/base_tables.html' %}
+<thead>
+{% block columns %}
+    <tr>
+        <th scope="col">Movie</th>
+        <th scope="col">Time</th>
+        <th scope="col">Hall</th>
+
+    </tr>
+
+{% endblock %}
+</thead>
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item "><a href="{% url 'home' %}">Home</a></li>
+    <li class="breadcrumb-item ">Projections</li>
+{% endblock breadcrumb %}
+
+<tbody>
+{% block rows %}
+    {% for projection in projections %}
+        <tr>
+            <td>{{ projection.movie }}</td>
+            <td>Projection begins on {{ projection.time.beginning_time }} and ends on {{ projection.time.ending_time.time }}</td>
+            <td>{{ projection.hall }}, you can <a href="/Cinema/reserves/{{ projection.id }}" > reserve here</a></td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+<tbody>
+
+
