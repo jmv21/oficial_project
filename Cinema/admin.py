@@ -7,15 +7,18 @@ from .models.Purchase import Purchase
 from .models.Time import Time
 
 
-# Register your models here.
 class CinemaAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
+
     def has_add_permission(self, request):
         return False
+
     def has_change_permission(self, request, obj=None):
         return False
 
+
+# Register your models here.
 admin.site.register(Actor)
 admin.site.register(Hall)
 admin.site.register(Seat, CinemaAdmin)
