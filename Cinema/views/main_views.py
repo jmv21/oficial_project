@@ -10,14 +10,36 @@ from Cinema.models.Hall import Seat
 
 from Cinema.models.Purchase import Purchase
 
-from Cinema.services.proyection_services import seats_query, get_spec_proj
+from Cinema.services.proyection_services import seats_query, get_spec_proj, discount_update_active, all_discounts_query
 
 
+class home(TemplateView):
+    template_name = 'Main_Templates/base.html'
+    success_url = reverse_lazy('home')
 
-def home(request):
-    # <--Load the template--->
-    template = loader.get_template('Main_Templates/base.html')
-    return HttpResponse(template.render({}, request))
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['discounts'] = all_discounts_query()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+
+        try:
+            options = request.POST.getlist('option[]')
+        except:
+            discount_update_active(None, True)
+            return HttpResponseRedirect(self.success_url)
+
+        discount_update_active(options)
+
+        return HttpResponseRedirect(self.success_url)
 
 
 def test(request):

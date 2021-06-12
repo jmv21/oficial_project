@@ -24,7 +24,7 @@ urlpatterns = [
     path('Cinema/', include('Cinema.infraestructure.urls')),
     path('Users/', include('Users.urls')),
     path('admin/', admin.site.urls),
-    path('', main_views.home, name='home'),
+    path('', main_views.home.as_view(), name='home'),
 ]
 
 urlpatterns+= static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
