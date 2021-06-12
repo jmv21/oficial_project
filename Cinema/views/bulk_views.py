@@ -50,6 +50,8 @@ class ActorsListView(ListView):
 
 
 def projections(request):
+    # First update expired projections
+    proyection_services.update_projections_query()
     current_projections = proyection_services.projection_query()
     context = {
         'projections': current_projections

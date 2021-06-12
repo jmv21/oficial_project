@@ -1,3 +1,4 @@
+from datetime import datetime
 
 from Cinema.models.Actor import Actor, Discount
 
@@ -21,8 +22,28 @@ def movies_query():
 
 
 def projection_query():
+    return Projection.objects.filter(active=True)
+
+
+def all_projections_query():
     return Projection.objects.all()
 
+
+def update_projections_query():
+    proj = projection_query().values('id', 'time__ending_time')
+    ids = list(proj.values_list('id', flat=True))
+    times = list(proj.values_list('time__ending_time', flat=True))
+
+    cdate = datetime.now()
+    ids_to_update = []
+
+    # Store all expired projections
+    for i in range(0, len(times)):
+
+        if cdate >= times[i]:
+            ids_to_update.append(ids[i])
+
+    Projection.objects.filter(id__in=ids_to_update).update(active=False)
 
 
 def all_discounts_query():

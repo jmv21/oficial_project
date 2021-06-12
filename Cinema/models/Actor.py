@@ -26,3 +26,4 @@ class Discount(models.Model):
 
     class Meta:
         verbose_name = 'Discount'
+

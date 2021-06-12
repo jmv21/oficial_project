@@ -1,4 +1,10 @@
+<<<<<<< Updated upstream
 from Cinema.models.Entry import Entry
+=======
+from django import template
+from django import template
+from django.db.models import ManyToManyField
+>>>>>>> Stashed changes
 
 from django.shortcuts import render
 from django.template import loader
@@ -6,6 +12,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
+from Cinema.models.Entry import Entry
 from Cinema.models.Hall import Seat
 
 from Cinema.models.Purchase import Purchase
@@ -72,7 +79,7 @@ class Reserves(TemplateView):
     def post(self, request, *args, **kwargs):
 
         try:
-            options = request.POST.getlist('option[]')
+            options = request.POST.getlist('reserved[]')
         except:
             return HttpResponseRedirect(reverse_lazy('home'))
 
@@ -85,8 +92,22 @@ class Reserves(TemplateView):
 
         email = request.POST['email']
 
-        # NEEDED FOR THE NEXT STEP
-        purchase = Purchase.create(email=email, entries=entries_list)
-        Purchase.save(*args, **kwargs)
+        purchase = Purchase.create(email=email, entries=ManyToManyField, discounts=ManyToManyField)
+
+        for entry in entries_list:
+            purchase.entries.add(entry)
+
+        # If discounts were chosen
+        try:
+            options = request.POST.getlist('discount[]')
+        except:
+            purchase.save(*args, **kwargs)
+            return HttpResponseRedirect(self.success_url)
+
+        # Add all selected discounts
+        for discount in options:
+            purchase.discounts.add(discount)
+
+        purchase.save(*args, **kwargs)
 
         return HttpResponseRedirect(self.success_url)

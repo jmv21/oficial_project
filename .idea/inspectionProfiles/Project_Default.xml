@@ -1,6 +1,7 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+<<<<<<< Updated upstream
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
@@ -29,6 +30,8 @@
       </option>
       <option name="myCustomValuesEnabled" value="true" />
     </inspection_tool>
+=======
+>>>>>>> Stashed changes
     <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredErrors">
         <list>
@@ -188,6 +191,7 @@
           <option value="E501" />
           <option value="W29" />
           <option value="E501" />
+<<<<<<< Updated upstream
           <option value="W29" />
           <option value="E501" />
           <option value="W29" />
@@ -336,6 +340,8 @@
           <option value="E501" />
           <option value="W29" />
           <option value="E501" />
+=======
+>>>>>>> Stashed changes
         </list>
       </option>
     </inspection_tool>
