@@ -210,7 +210,8 @@
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Set the actives discounts:</h5>
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle">Set the
+                                                            actives discounts:</h5>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
@@ -248,7 +249,8 @@
                                                                            value="{{ discount.id }}">
                                                                     <label class="custom-control-label"
                                                                            for="customSwitch{{ forloop.counter0 }}"
-                                                                    >{{ discount.description }} ({{ discount.amount}}%)</label>
+                                                                    >{{ discount.description }}
+                                                                        ({{ discount.amount }}%)</label>
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
@@ -326,10 +328,29 @@
     $('#myModal').on('hidden.bs.modal', function (e) {
         init();
     })
+
+    function toast(text) {
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        Toast.fire({
+            icon: 'succes',
+            title: text
+        })
+    }
+
+    $('#my_post').on('submit', function () {
+        toast("sdjaio")
+    })
 </script>
 
 {% block add_js %}
 
 {% endblock add_js %}
-</body>
-</html>
+<
+/body>
+< /html>
