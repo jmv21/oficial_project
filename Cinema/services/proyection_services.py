@@ -1,14 +1,13 @@
 from datetime import datetime
 
-from Cinema.models.Actor import Actor, Discount
+from Cinema.models.Actor import Discount
 
-from Cinema.models.Hall import Hall, Seat
 from Cinema.models.Actor import Actor
 
 from Cinema.models.Movie import Movie
 from Cinema.models.Projection import Projection
 from Cinema.models.Hall import Seat
-# from Cinema.models.Discount import Discount
+
 from django.db.models import Sum
 from django.db.models import F
 

@@ -1,10 +1,7 @@
-<<<<<<< Updated upstream
 from Cinema.models.Entry import Entry
-=======
-from django import template
-from django import template
+
 from django.db.models import ManyToManyField
->>>>>>> Stashed changes
+
 
 from django.shortcuts import render
 from django.template import loader

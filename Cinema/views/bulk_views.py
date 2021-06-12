@@ -2,14 +2,10 @@ from django.shortcuts import render
 
 # Home page view
 from django.views.generic import ListView, UpdateView
-
-from Cinema.forms import DiscountForm
-# from Cinema.models.Discount import Discount
 from Cinema.services import proyection_services
 
-from Cinema.models.Actor import Actor, Discount
+from Cinema.models.Actor import Actor
 from Cinema.models.Movie import Movie
-from Cinema.models.Projection import Projection
 
 
 class MoviesListView(ListView):
