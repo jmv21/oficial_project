@@ -105,8 +105,8 @@
                                                             id='select{{ forloop.counter0 }}' name="select[]">
                                                     </select>
                                                 </div>
-{#                                                <select class="form-control" multiple="" id='select{{ forloop.counter0 }}'#}
-{#                                                        name="select[]"></select>#}
+                                                {#                                                <select class="form-control" multiple="" id='select{{ forloop.counter0 }}'#}
+                                                {#                                                        name="select[]"></select>#}
                                                 <!-- /.form-group -->
                                             </div>
                                         </div>
@@ -242,10 +242,10 @@
             $('.select2').select2({
                 closeOnSelect: false,
                 allowClear: true
-            }).on('select2:unselecting',function () {
+            }).on('select2:unselecting', function () {
                 $(this).data('unselecting', true);
             }).on('select2:opening', function (e) {
-                if($(this).data('unselecting')){
+                if ($(this).data('unselecting')) {
                     $(this).removeData('unselecting');
                     e.preventDefault();
                 }
@@ -264,14 +264,16 @@
     </script>
 
     <script type="application/javascript">
-        var select2_data= [];
-        function select2_addElement(id,text){
-            let option= new Option(text,id,false,false);
+        var select2_data = [];
+
+        function select2_addElement(id, text) {
+            let option = new Option(text, id, false, false);
             let my_select = document.getElementsByName('select[]');
             for (let i = 0; i < my_select.length; i++) {
                 $('#select' + i).append(option);
                 $('#select' + i).trigger('change')
-                $('#select' + i).data();
+                let x = $('#select' + i).data();
+                console.log(x)
             }
         }
 
@@ -301,7 +303,7 @@
             if (widget.checked === true) {
                 result += cost;
                 counter++;
-                select2_addElement(widget.value,"Seat "+ widget.value)
+                select2_addElement(widget.value, "Seat " + widget.value)
             } else {
                 result -= cost;
                 counter--;
@@ -364,7 +366,7 @@
 
         function fill_results(widget) {
             let rowcollection = get_checkbx_datatable()
-            widget.value = " ";
+            widget.value = '';
             rowcollection.each(function (index, element) {
                 if (element.checked) {
                     widget.value === '' ? widget.value += element.value : widget.value += "," + element.value;
@@ -386,6 +388,26 @@
             });
             document.getElementById('credit_card_input').readOnly = document.getElementById('customCheckbox1').checked;
         }
+
+
+        $('#button').click(function () {
+            let a = document.getElementById('result');
+            if (a != null) {
+                fill_results(a);
+                return;
+            }
+            let new_input = document.createElement('input')
+            new_input.id = "result";
+            new_input.type = 'text';
+            new_input.className = 'form-control';
+            new_input.disabled = true;
+            new_input.hidden = false;
+            new_input.name = 'result';
+            let form = document.getElementById('my_post');
+            form.appendChild(new_input);
+            fill_results(new_input);
+        })
+
     </script>
 
     <script>
