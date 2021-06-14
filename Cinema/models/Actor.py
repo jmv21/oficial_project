@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.forms import model_to_dict
+
 from .Movie import Movie
 
 
@@ -23,6 +25,9 @@ class Discount(models.Model):
 
     def __str__(self):
         return self.type
+
+    def to_json(self):
+        return model_to_dict(self)
 
     class Meta:
         verbose_name = 'Discount'

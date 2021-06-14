@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static "plugins/datatables-buttons/css/buttons.bootstrap4.min.css" %}">
 
     <link rel="stylesheet" href="{% static "plugins/select2/css/select2.min.css" %}">
+    <link rel="stylesheet" href="{% static "lib/custom_select2.css" %}">
     <link rel="stylesheet" href="{% static "plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css" %}">
 
 {% endblock add_css %}
@@ -29,14 +30,12 @@
         <form action="." method="post" id="my_post">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-7">
+                    <div class="col-lg-8">
 
                         {% csrf_token %}
                         <div class="card" style="display: compact">
                             <div class="card-header"><h3><strong>Reserve ticket</strong></h3></div>
                             <div class="card-body">
-
-
                                 <label for="user_email">User's email</label>
                                 <div class="form-group">
                                     <div class="input-group mb-3" id="this">
@@ -76,38 +75,52 @@
                                     >Check this to pay with
                                         partner points</label>
                                 </div>
-                                <div class="row">
-                                    <label>
-                                        <select class="form-control select2"
-                                                multiple="multiple"
-                                                name="discount[]"
-                                                data-placeholder="Select the element/s to see resistant armor sets to it/them"
-                                                data-dropdown-css-class="select2-blue"
-                                                style="width: 80%;"></select>
-                                    </label>
-                                </div>
-                                <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox"
-                                           id="customCheckbox2"
-                                           value="option1">
-                                    <label for="customCheckbox2" class="custom-control-label">Apply
-                                        discount 1</label>
-                                </div>
+                                <hr/>
 
-                                <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox"
-                                           id="customCheckbox3"
-                                           value="option1">
-                                    <label for="customCheckbox3" class="custom-control-label">Apply
-                                        discount 2</label>
-                                </div>
+                                {% for discount in active_discounts %}
+                                    <div class="form-row align-items-center">
+                                        <div class="col-3 my-1">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox"
+                                                       id="active_discount{{ forloop.counter0 }}"
+                                                       name="active_discount[]"
+                                                       value="{{ discount.id }}">
+                                                <label class="custom-control-label"
+                                                       for="active_discount{{ forloop.counter0 }}"
+                                                >{{ discount.description }}
+                                                    ({{ discount.amount }}%)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto my-1"></div>
+                                        <div class="col-8 my-1">
+                                            <div class="form-group">
+                                                <label></label>
+                                                <div class="select2-blue">
+                                                    <select class="select2 select2-hidden-accessible select2-close-mask"
+                                                            multiple=""
+                                                            data-placeholder="Select a seat to apply the discount to the correspond entry"
+                                                            data-dropdown-css-class="select2-blue" style="width: 100%;"
+                                                            data-select2-id="{{ discount.id }}" tabindex="-1"
+                                                            aria-hidden="true"
+                                                            id='select{{ forloop.counter0 }}' name="select[]">
+                                                    </select>
+                                                </div>
+{#                                                <select class="form-control" multiple="" id='select{{ forloop.counter0 }}'#}
+{#                                                        name="select[]"></select>#}
+                                                <!-- /.form-group -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
 
                                 <hr/>
                                 <!-- card-secondary -->
                                 <div class="card card-secondary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Select the seats that you like to
-                                            reserve</h3>
+                                        <h4><strong><i class="fa fa-"></i>Select the seats that you like to
+                                            reserve</strong>
+                                        </h4>
+
                                     </div>
                                     <!-- /.card-header -->
                                     <div class="card-body">
@@ -129,7 +142,9 @@
                                                                 <input type="checkbox"
                                                                        name="reserved[]"
                                                                        class="checkbox-row my-checkbox"
-                                                                       onclick="test(this)">
+                                                                       id="checkbox{{ forloop.counter0 }}"
+                                                                       value="{{ seat.id }}"
+                                                                >
                                                             </label>
                                                         </td>
                                                         <td>{{ seat.id }}</td>
@@ -149,7 +164,7 @@
                         <!-- /.primary card-->
                     </div>
                     <!-- /.col -->
-                    <div class="col-lg-5">
+                    <div class="col-lg-4">
                         <div class="card card-default">
                             <div class="card-header">
                                 <h3><strong><i class="fa fa-shopping-cart"></i>Sale Details</strong>
@@ -157,7 +172,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-
+                                <!-- /.col -->
                                 {% csrf_token %}
                                 <label for="cost">Total to pay:</label>
                                 <div class="input-group mb-3">
@@ -205,9 +220,11 @@
     <!-- DataTables  & Plugins -->
     <script src="{% static "plugins/DataTables-1.10.24/js/jquery.dataTables.js" %}"></script>
     <script src="{% static "plugins/DataTables-1.10.24/js/dataTables.bootstrap4.js" %}"></script>
-    <script src="{% static "lib/sweetalert2-9.10.0/sweetalert2.all.js" %}"></script>
     <script src="{% static "plugins/jquery-validation/jquery.validate.min.js" %}"></script>
     <script src="{% static "plugins/jquery-validation/additional-methods.js" %}"></script>
+
+
+
 
 
     <!-- Select2 -->
@@ -218,8 +235,45 @@
     <script src="{% static "plugins/moment/moment.min.js" %}"></script>
     <script src="{% static "plugins/inputmask/jquery.inputmask.min.js" %}"></script>
 
+    <script>
+        {#Select2 controller#}
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2({
+                closeOnSelect: false,
+                allowClear: true
+            }).on('select2:unselecting',function () {
+                $(this).data('unselecting', true);
+            }).on('select2:opening', function (e) {
+                if($(this).data('unselecting')){
+                    $(this).removeData('unselecting');
+                    e.preventDefault();
+                }
+            });
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+        });
+
+        var select = null
+        $(function get_select() {
+            select = document.getElementsByName('option[]');
+        })
+    </script>
 
     <script type="application/javascript">
+        var select2_data= [];
+        function select2_addElement(id,text){
+            let option= new Option(text,id,false,false);
+            let my_select = document.getElementsByName('select[]');
+            for (let i = 0; i < my_select.length; i++) {
+                $('#select' + i).append(option);
+                $('#select' + i).trigger('change')
+                $('#select' + i).data();
+            }
+        }
 
         $(function () {
             $('#example1').DataTable({
@@ -232,6 +286,7 @@
                 "responsive": true,
             });
         });
+
         {% if not user.is_authenticated %}
             $(function () {
                 let x = document.getElementById('customCheckbox1')
@@ -240,29 +295,45 @@
             })
         {% endif%}
 
-    </script>
-
-
-    <script>
-        function toast(text) {
-            var Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-
-            Toast.fire({
-                icon: 'error',
-                title: text
-            })
+        function test(widget) {
+            let x = document.getElementById('cost');
+            let result = parseFloat(x.value)
+            if (widget.checked === true) {
+                result += cost;
+                counter++;
+                select2_addElement(widget.value,"Seat "+ widget.value)
+            } else {
+                result -= cost;
+                counter--;
+            }
+            if ((document.getElementById('customCheckbox1').checked)) {
+                {% if user.is_authenticated %}
+                    if (result > {{user.partner_points}}) {
+                        toast("You don't have enough partner points to make this operation")
+                        widget.checked = false
+                        counter--;
+                    } else {
+                        x.value = result.toFixed(2);
+                    }
+                {% endif %}
+            } else {
+                x.value = result.toFixed(2);
+            }
+            document.getElementById('button').disabled = counter <= 0;
         }
     </script>
+
+
+
 
     <script>
         var aux_value = ''
         var cost = 0
         var counter = 0;
+
+        $('.my-checkbox').click(function () {
+            test(document.getElementById(this.id));
+        })
 
         $(document).onreadystatechange = function () {
             set_cost();
@@ -281,26 +352,6 @@
             return myTable.$(".my-checkbox", {"page": "all"});
         }
 
-        function test(widget) {
-            let x = document.getElementById('cost');
-            let result = parseFloat(x.value)
-            if (widget.checked === true) {
-                result += cost;
-                counter++;
-            } else {
-                result -= cost;
-                counter--;
-            }
-            if ((document.getElementById('customCheckbox1').checked) && result > {{user.partner_points}}) {
-                toast("You don't have enough partner points to make this operation")
-                widget.checked = false
-                counter--;
-            } else {
-                x.value = result.toFixed(2);
-            }
-            document.getElementById('button').disabled = counter <= 0;
-        }
-
         function credit_valid(widget) {
             if (!(widget.validity.valid)) {
                 widget.value = aux_value;
@@ -309,12 +360,6 @@
                 widget.value = aux_value;
             }
             aux_value = widget.value;
-        }
-
-        function reset() {
-            document.getElementById('button').disabled = true;
-            counter = 0;
-            document.getElementById('cost').value = "0.00";
         }
 
         function fill_results(widget) {
@@ -346,7 +391,7 @@
     <script>
         $('#customCheckbox1').click(function () {
             reset();
-            document.getElementById('button').disabled=true;
+            document.getElementById('button').disabled = true;
         });
 
         {#Error controller#}
@@ -384,16 +429,6 @@
             })
         });
 
-        {#Select2 controller#}
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2();
-
-            //Initialize Select2 Elements
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-        });
 
         $(function () {
             set_cost();
@@ -409,9 +444,4 @@
             });
         });
     </script>
-
-
-
-
-
 {% endblock add_js %}

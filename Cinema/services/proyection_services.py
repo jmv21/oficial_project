@@ -1,4 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
+
+import pytz
 
 from Cinema.models.Actor import Discount
 
@@ -33,7 +35,7 @@ def update_projections_query():
     ids = list(proj.values_list('id', flat=True))
     times = list(proj.values_list('time__ending_time', flat=True))
 
-    cdate = datetime.now()
+    cdate = pytz.UTC.localize(datetime.now())
     ids_to_update = []
 
     # Store all expired projections
@@ -45,29 +47,21 @@ def update_projections_query():
     Projection.objects.filter(id__in=ids_to_update).update(active=False)
 
 
+def all_movies_query():
+    return Movie.objects.all()
+
+
 def all_discounts_query():
     return Discount.objects.all()
 
 
 def active_discounts_query():
     # Get all active discounts
-    all_actives = Discount.objects.all().values('type', 'amount').filter(active=True)
+    # all_actives = Discount.objects.all().values('type', 'amount').filter(active=True)
     # Make a list of both types and amounts
-    types = list(all_actives.values_list('type'))
-    amounts = list(all_actives.values_list('amount'))
+    # types = list(all_actives.values_list('type'))
 
-    result_list = []
-    kt = 0
-    # Get the first and larger group of discounts which total amounts is less than 100
-    for i in range(0, len(amounts)):
-
-        kt += amounts[i]
-        if kt > 100:
-            break
-
-        result_list.append(types[i])
-
-    return Discount.objects.all().filter(type__in=result_list)
+    return Discount.objects.all().filter(active=True)
 
 
 def discount_update_active(options, all_inactive=False):
@@ -79,8 +73,10 @@ def discount_update_active(options, all_inactive=False):
         a = Discount.objects.all().values_list()
         print(a)
 
+
 def get_spec_proj(id):
     return Projection.objects.get(id=id)
+
 
 def seats_query(id):
     return Seat.objects.filter(hall_id=id)

@@ -30,6 +30,7 @@ class LoginFormView(FormView):
         return context
 
 
+
 class LogoutRedirectView(RedirectView):
     pattern_name = 'home'
 

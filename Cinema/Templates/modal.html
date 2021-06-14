@@ -1,0 +1,61 @@
+<!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Set the
+                        actives discounts:</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" enctype="multipart/form-data"  id="discount_form">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        {% if form.errors %}
+                            <div class="alert alert-danger alert-dismissible"
+                                 id="Error">
+                                <button type="button" class="close"
+                                        data-dismiss="alert" aria-hidden="true">×
+                                </button>
+                                <h5><i class="icon fas fa-ban"></i> Some error/s has
+                                    ocurred</h5>
+                                <ul>
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        {% for discount in discounts %}
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox"
+                                       class="custom-control-input"
+                                       name="option[]"
+                                       id="customSwitch{{ forloop.counter0 }}"
+                                       value="{{ discount.id }}">
+                                <label class="custom-control-label"
+                                       for="customSwitch{{ forloop.counter0 }}"
+                                >{{ discount.description }}
+                                    ({{ discount.amount }}%)</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Close
+                        </button>
+                        <button type="submit" class="btn btn-primary the_button">Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

@@ -1,20 +1,23 @@
+import json
+
+from django.core import serializers
+
 from Cinema.models.Entry import Entry
 
 from django.db.models import ManyToManyField
 
-
 from django.shortcuts import render
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
 from Cinema.models.Entry import Entry
-from Cinema.models.Hall import Seat
 
 from Cinema.models.Purchase import Purchase
 
-from Cinema.services.proyection_services import seats_query, get_spec_proj, discount_update_active, all_discounts_query
+from Cinema.services.proyection_services import seats_query, get_spec_proj, discount_update_active, all_discounts_query, \
+    all_movies_query, active_discounts_query
 
 
 class home(TemplateView):
@@ -27,6 +30,7 @@ class home(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['discounts'] = all_discounts_query()
+        context['movies'] = all_movies_query()[:5]
         return context
 
     def get(self, request, *args, **kwargs):
@@ -34,22 +38,14 @@ class home(TemplateView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-
         try:
-            options = request.POST.getlist('option[]')
+            options = request.POST.getlist('checked[]')
         except:
             discount_update_active(None, True)
-            return HttpResponseRedirect(self.success_url)
-
+            return JsonResponse({})
         discount_update_active(options)
-
-        return HttpResponseRedirect(self.success_url)
-
-
-def test(request):
-    # <--Load the template--->
-    template = loader.get_template('test.html')
-    return HttpResponse(template.render({}, request))
+        data = serializers.serialize('json', all_discounts_query())
+        return JsonResponse(data, safe=False)
 
 
 class Reserves(TemplateView):
@@ -62,6 +58,7 @@ class Reserves(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['discounts'] = all_discounts_query()
         return context
 
     def get(self, request, *args, **kwargs):
@@ -71,6 +68,7 @@ class Reserves(TemplateView):
         context = self.get_context_data(**kwargs)
         context['projection'] = proj
         context['seats'] = seats_query(proj.hall_id)
+        context['active_discounts'] = active_discounts_query()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -107,4 +105,17 @@ class Reserves(TemplateView):
 
         purchase.save(*args, **kwargs)
 
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponse(self.success_url)
+
+
+def test(request):
+    # <--Load the template--->
+    try:
+        options = request.POST['id']
+    except:
+        discount_update_active(None, True)
+        # return HttpResponseRedirect(self.success_url)
+
+    discount_update_active(options)
+
+    # return HttpResponseRedirect(self.success_url)
