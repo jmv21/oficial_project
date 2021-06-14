@@ -8,10 +8,10 @@ from Cinema.models.Hall import Seat
 
 class Purchase(models.Model):
     email = models.EmailField()
-    entries = models.ManyToManyField(Entry, blank=False)
+    entries = models.ManyToManyField(Entry, blank=False, db_index=True)
 
     # A list of discounts id separated by ','
-    discounts = models.ManyToManyField(Discount)
+    # discounts = models.ManyToManyField(Discount)
 
     def __str__(self):
         return str(self.email) + " reservation"

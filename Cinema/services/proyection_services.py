@@ -80,3 +80,8 @@ def get_spec_proj(id):
 
 def seats_query(id):
     return Seat.objects.filter(hall_id=id)
+
+
+def available_entries_query(projection):
+
+    return Entry.objects.filter(projection=projection, reserved=False)
