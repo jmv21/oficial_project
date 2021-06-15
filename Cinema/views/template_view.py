@@ -75,19 +75,10 @@ class details(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['movie'] = Movie.objects.get(id=id)
+        movie_id = self.kwargs['id']
+        context['movie'] = Movie.objects.get(id=movie_id)
         return context
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
-
-    # def post(self, request, *args, **kwargs):
-    #     try:
-    #         options = request.POST.getlist('checked[]')
-    #     except:
-    #         discount_update_active(None, True)
-    #         return JsonResponse({})
-    #     discount_update_active(options)
-    #     data = serializers.serialize('json', all_discounts_query())
-    #     return JsonResponse(data, safe=False)
