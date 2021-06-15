@@ -56,8 +56,8 @@ def projections(request):
 
 
 def details(request, id):
-
-    return render(request, 'movies_details.html', context)
+    return
+    # return render(request, 'movies_details.html', context)
 
 
 def active_discounts(request):
