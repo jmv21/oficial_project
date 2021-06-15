@@ -360,28 +360,28 @@
 
     </script>
 
-    <script>
-        $('#discount_form').submit(function (e) {
+{#    <script>#}
+{#        $('#discount_form').submit(function (e) {#}
             {#e.preventDefault();#}
-            $.ajax({
-                cache: false,
-                type: 'POST',
-                url: '{% url 'home' %}',
-                data: {'checked': get_checked(), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                async: true,
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSFRToken", "{{ csrf_token }}");
-                },
-                success: function (results) {
-                    results = JSON.parse(results);
-                    my_data = results;
-                    has_changed = true;
-                    $('#myModal').modal('hide');
-                    toast('Saved succesfully', 'success');
-                },
-            });
-            return false;
-        });
+{#            $.ajax({#}
+{#                cache: false,#}
+{#                type: 'POST',#}
+{#                url: '{% url 'home' %}',#}
+{#                data: {'checked': get_checked(), 'csrfmiddlewaretoken': '{{ csrf_token }}'},#}
+{#                async: true,#}
+{#                beforeSend: function (xhr, settings) {#}
+{#                    xhr.setRequestHeader("X-CSFRToken", "{{ csrf_token }}");#}
+{#                },#}
+{#                success: function (results) {#}
+{#                    results = JSON.parse(results);#}
+{#                    my_data = results;#}
+{#                    has_changed = true;#}
+{#                    $('#myModal').modal('hide');#}
+{#                    toast('Saved succesfully', 'success');#}
+{#                },#}
+{#            });#}
+{#            return false;#}
+{#        });#}
     </script>
 {% endblock scripts %}
 
