@@ -135,7 +135,7 @@
                                             </thead>
                                             <tbody>
                                             {% block rows %}
-                                                {% for seat in seats %}
+                                                {% for entry in entries %}
                                                     <tr>
                                                         <td>
                                                             <label>
@@ -143,12 +143,12 @@
                                                                        name="reserved[]"
                                                                        class="checkbox-row my-checkbox"
                                                                        id="checkbox{{ forloop.counter0 }}"
-                                                                       value="{{ seat.id }}"
+                                                                       value="{{ entry.id }}"
                                                                 >
                                                             </label>
                                                         </td>
-                                                        <td>{{ seat.id }}</td>
-                                                        <td>{{ seat.number }}</td>
+                                                        <td>{{ entry.seat.id }}</td>
+                                                        <td>{{ entry.seat.number }}</td>
                                                     </tr>
                                                 {% endfor %}
                                             {% endblock %}
@@ -319,7 +319,7 @@
             if (widget.checked === true) {
                 result += cost;
                 counter++;
-                select2_addElement(widget.value, "Seat " + widget.value)
+                select2_addElement(widget.value, "Seat " + ((parseInt(widget.id.toString()[widget.id.toString().length-1]))+1));
             } else {
                 result -= cost;
                 counter--;
@@ -350,7 +350,7 @@
         var cost = 0
         var counter = 0;
 
-        $('.my-checkbox').click(function () {
+        $('.my-checkbox').change(function () {
             test(document.getElementById(this.id));
         })
 
@@ -432,6 +432,7 @@
             reset();
             document.getElementById('button').disabled = true;
         });
+
 
         {#Error controller#}
         $(function () {

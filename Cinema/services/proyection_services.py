@@ -7,7 +7,7 @@ from Cinema.models.Actor import Discount
 from Cinema.models.Actor import Actor
 
 from Cinema.models.Movie import Movie
-from Cinema.models.Projection import Projection
+from Cinema.models.Projection import Projection, Entry
 from Cinema.models.Hall import Seat
 
 from django.db.models import Sum
