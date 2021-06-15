@@ -17,7 +17,7 @@ from Cinema.models.Entry import Entry
 from Cinema.models.Purchase import Purchase
 
 from Cinema.services.proyection_services import seats_query, get_spec_proj, discount_update_active, all_discounts_query, \
-    all_movies_query, active_discounts_query
+    all_movies_query, active_discounts_query, available_entries_query
 
 
 class home(TemplateView):
@@ -67,7 +67,7 @@ class Reserves(TemplateView):
         proj = get_spec_proj(proj_id)
         context = self.get_context_data(**kwargs)
         context['projection'] = proj
-        context['seats'] = seats_query(proj.hall_id)
+        context['entries'] = available_entries_query(proj)
         context['active_discounts'] = active_discounts_query()
         return render(request, self.template_name, context)
 
@@ -78,30 +78,29 @@ class Reserves(TemplateView):
         except:
             return HttpResponseRedirect(reverse_lazy('home'))
 
-        # Create an entry for every selected seat
-        entries_list = []
-        for seat in options:
-            aux = Entry.create(self.projection, seat)
-            entries_list.append(aux)
-            aux.save(*args, **kwargs)
-
         email = request.POST['email']
 
         purchase = Purchase.create(email=email, entries=ManyToManyField, discounts=ManyToManyField)
 
-        for entry in entries_list:
+        for entry in options:
             purchase.entries.add(entry)
 
         # If discounts were chosen
         try:
-            options = request.POST.getlist('discount[]')
+            options = request.POST.getlist('active_discount[]')
         except:
             purchase.save(*args, **kwargs)
             return HttpResponseRedirect(self.success_url)
 
         # Add all selected discounts
-        for discount in options:
-            purchase.discounts.add(discount)
+        discounts_per_entry = []
+        for item in options:
+            discounts_per_entry.append(str(item).split(","))
+
+        # Add to each entry the corresponding discounts
+        for i in range(0, len(discounts_per_entry)):
+            for item in discounts_per_entry[i]:
+                purchase.entries[i].add(item)
 
         purchase.save(*args, **kwargs)
 
