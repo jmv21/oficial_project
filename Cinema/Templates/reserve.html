@@ -236,8 +236,14 @@
     <script src="{% static "plugins/inputmask/jquery.inputmask.min.js" %}"></script>
 
     <script>
+        var discounts = []
         {#Select2 controller#}
         $(function () {
+            let _count = 0
+            {% for discount in active_discounts %}
+                _count++
+            {% endfor %}
+            discounts = new Array(_count);
             //Initialize Select2 Elements
             $('.select2').select2({
                 closeOnSelect: false,
@@ -267,14 +273,24 @@
         var select2_data = [];
 
         function select2_addElement(id, text) {
-            let option = new Option(text, id, false, false);
             let my_select = document.getElementsByName('select[]');
-            for (let i = 0; i < my_select.length; i++) {
-                $('#select' + i).append(option);
-                $('#select' + i).trigger('change')
-                let x = $('#select' + i).data();
-                console.log(x)
+
+            if (document.getElementsByClassName('_option' + id + '[]').length === 0) {
+                for (let i = 0; i < my_select.length; i++) {
+                    let option = new Option(text, id, false, false)
+
+                    option.className = '_option' + id + '[]';
+                    $('#select' + i).append(option);
+                    $('#select' + i).trigger('change');
+                }
             }
+        }
+
+        function select2_removeElement(id) {
+            let a = document.getElementsByClassName('_option' + id + '[]');
+            Array.from(a).forEach(function (element) {
+                element.remove();
+            })
         }
 
         $(function () {
@@ -307,6 +323,7 @@
             } else {
                 result -= cost;
                 counter--;
+                select2_removeElement(widget.value)
             }
             if ((document.getElementById('customCheckbox1').checked)) {
                 {% if user.is_authenticated %}
