@@ -71,7 +71,6 @@ class Reserves(TemplateView):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-
         try:
             options = request.POST.getlist('reserved[]')
         except:
