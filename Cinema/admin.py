@@ -1,8 +1,7 @@
 from django.contrib import admin
 from .models.Actor import Actor, Movie, Discount
-from .models.Projection import Projection
+from .models.Projection import Projection, Entry
 from .models.Hall import Hall, Seat
-from .models.Entry import Entry
 from .models.Purchase import Purchase
 from .models.Time import Time
 

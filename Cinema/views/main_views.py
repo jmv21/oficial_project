@@ -2,7 +2,7 @@ import json
 
 from django.core import serializers
 
-from Cinema.models.Entry import Entry
+from Cinema.models.Projection import Entry
 
 from django.db.models import ManyToManyField
 
@@ -12,7 +12,6 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
-from Cinema.models.Entry import Entry
 
 from Cinema.models.Purchase import Purchase
 
@@ -106,15 +105,3 @@ class Reserves(TemplateView):
 
         return HttpResponse(self.success_url)
 
-
-def test(request):
-    # <--Load the template--->
-    try:
-        options = request.POST['id']
-    except:
-        discount_update_active(None, True)
-        # return HttpResponseRedirect(self.success_url)
-
-    discount_update_active(options)
-
-    # return HttpResponseRedirect(self.success_url)
