@@ -307,58 +307,58 @@
     <!-- SweetAlert -->
     <script src="{% static "lib/sweetalert2-9.10.0/sweetalert2.all.js" %}"></script>
 
-    <script>
-        function toast(text, my_icon) {
-            var Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-
-            Toast.fire({
-                icon: my_icon,
-                title: text
-            })
-        }
-    </script>
-
-    <script type="application/javascript">
-        var has_changed = false;
-
-        var my_data = [];
-        $(document).onreadystatechanged = init()
-
-        function init() {
-            let x = document.getElementsByName('option[]');
-            let count = 0;
-            if (!has_changed) {
-                {%  for discount in discounts %}
-                    {% if discount.active %}
-                        x[count].checked = true;
-                    {% endif %}
-                    count++;
-                {% endfor %}
-            } else {
-                for (let i = 0; i < my_data.length; i++) {
-                    x[i].checked = my_data[i].fields['active'];
-                }
-            }
-        }
-
-        $('#myModal').on('hide.bs.modal', function (e) {
-            init();
-        })
-        $('#myModal').on('hidden.bs.modal', function (e) {
-
-        })
-
-        function get_checked() {
-            let all = document.getElementsByName('option[]');
-            return [].filter.call(all, (c) => c.checked).map(c => c.value);
-        }
-
-    </script>
+{#    <script>#}
+{#        function toast(text, my_icon) {#}
+{#            var Toast = Swal.mixin({#}
+{#                toast: true,#}
+{#                position: 'top-end',#}
+{#                showConfirmButton: false,#}
+{#                timer: 3000#}
+{#            });#}
+{##}
+{#            Toast.fire({#}
+{#                icon: my_icon,#}
+{#                title: text#}
+{#            })#}
+{#        }#}
+{#    </script>#}
+{##}
+{#    <script type="application/javascript">#}
+{#        var has_changed = false;#}
+{##}
+{#        var my_data = [];#}
+{#        $(document).onreadystatechanged = init()#}
+{##}
+{#        function init() {#}
+{#            let x = document.getElementsByName('option[]');#}
+{#            let count = 0;#}
+{#            if (!has_changed) {#}
+{#                {%  for discount in discounts %}#}
+{#                    {% if discount.active %}#}
+{#                        x[count].checked = true;#}
+{#                    {% endif %}#}
+{#                    count++;#}
+{#                {% endfor %}#}
+{#            } else {#}
+{#                for (let i = 0; i < my_data.length; i++) {#}
+{#                    x[i].checked = my_data[i].fields['active'];#}
+{#                }#}
+{#            }#}
+{#        }#}
+{##}
+{#        $('#myModal').on('hide.bs.modal', function (e) {#}
+{#            init();#}
+{#        })#}
+{#        $('#myModal').on('hidden.bs.modal', function (e) {#}
+{##}
+{#        })#}
+{##}
+{#        function get_checked() {#}
+{#            let all = document.getElementsByName('option[]');#}
+{#            return [].filter.call(all, (c) => c.checked).map(c => c.value);#}
+{#        }#}
+{##}
+{#    </script>#}
 
 {#    <script>#}
 {#        $('#discount_form').submit(function (e) {#}
