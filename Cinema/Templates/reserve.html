@@ -319,7 +319,7 @@
             if (widget.checked === true) {
                 result += cost;
                 counter++;
-                select2_addElement(widget.value, "Seat " + ((parseInt(widget.id.toString()[widget.id.toString().length-1]))+1));
+                select2_addElement(widget.value, "Seat " + ((parseInt(widget.id.toString()[widget.id.toString().length - 1])) + 1));
             } else {
                 result -= cost;
                 counter--;
@@ -350,8 +350,9 @@
         var cost = 0
         var counter = 0;
 
-        $('.my-checkbox').change(function () {
-            test(document.getElementById(this.id));
+        $('.my-checkbox').change(function (id = null) {
+            if (id != null) test(document.getElementById(this.id));
+            else test(document.getElementById(id));
         })
 
         $(document).onreadystatechange = function () {
@@ -398,12 +399,13 @@
         }
 
         function reset() {
-            document.getElementById('cost').value = "0.00"
             let rowcollection = get_checkbx_datatable()
             rowcollection.each(function (index, element) {
                 element.checked = false;
+                $('.my-checkbox').trigger('change')
             });
             document.getElementById('credit_card_input').readOnly = document.getElementById('customCheckbox1').checked;
+            document.getElementById('cost').value = "0.00"
         }
 
 
