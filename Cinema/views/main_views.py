@@ -76,7 +76,10 @@ class Reserves(TemplateView):
         except:
             return HttpResponseRedirect(reverse_lazy('home'))
 
-        email = request.POST['email']
+        email = request.POST.get('email')
+
+        if email is None or options is None:
+            return HttpResponseRedirect(reverse_lazy('home'))
 
         purchase = Purchase.create(email=email, entries=ManyToManyField, discounts=ManyToManyField)
 

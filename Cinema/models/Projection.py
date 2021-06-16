@@ -36,7 +36,7 @@ class Projection(models.Model):
     #         raise ValidationError("The same hall can't display more than one movie at the same time")
 
     class Meta:
-        unique_together = [["hall", "movie"], ["hall", "time"], ["movie", "time"]]
+        unique_together = [ ["hall", "time"]]
 
 
 class Entry(models.Model):
